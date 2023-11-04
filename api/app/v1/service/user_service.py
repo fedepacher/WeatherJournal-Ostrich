@@ -1,15 +1,9 @@
 from fastapi import HTTPException, status
 
-from passlib.context import CryptContext
-
 from api.app.v1.model.user_model import Users as UserModel
 from api.app.v1.schema import user_schema
+from api.app.v1.service.auth_service import get_password_hash
 
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
 
 def create_user(user: user_schema.UserRegister):
     """Create users and store them in the DB.
@@ -23,7 +17,7 @@ def create_user(user: user_schema.UserRegister):
     Returns:
         user_schema.User: User schema.
     """
-    get_user = UserModel.filter((UserModel.email == user.email) 
+    get_user = UserModel.filter((UserModel.email == user.email)
                                 | (UserModel.username == user.username)).first()
     if get_user:
         msg = "Email already registered"
@@ -43,7 +37,7 @@ def create_user(user: user_schema.UserRegister):
     db_user.save()
 
     return user_schema.User(
-        id = db_user.id,
-        username = db_user.username,
-        email = db_user.email
+        id=db_user.id,
+        username=db_user.username,
+        email=db_user.email
     )
