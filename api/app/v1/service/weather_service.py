@@ -38,3 +38,63 @@ def create_task(task: weather_schema.Weather, user: user_schema.User):
         longitude=db_task.longitude,
         comments=db_task.comments
     )
+
+
+def get_tasks(user: user_schema.User):
+    """Get all the user's entrance in the DB.
+
+    Args:
+        user (user_schema.User): User.
+
+    Returns:
+        list: List of entrance filtered by user.
+    """
+    tasks_by_user = WeatherModel.filter(
+                                        WeatherModel.user_id == user.id
+                                       ).order_by(WeatherModel.start_datetime.desc())
+
+    tasks_list = []
+    for task in tasks_by_user:
+        tasks_list.append(weather_schema.Weather(
+            id=task.id,
+            city_name=task.city_name,
+            start_datetime=task.start_datetime,
+            end_datetime=task.end_datetime,
+            avg_temperature=task.avg_temperature,
+            latitude=task.latitude,
+            longitude=task.longitude,
+            comments=task.comments
+        ))
+    return tasks_list
+
+
+def get_task_by_id(task_id: int, user: user_schema.User):
+    """Get user's entrance by ID in the DB.
+
+    Args:
+        task_id (int): ID of the entrance.
+        user (user_schema.User): User.
+
+    Returns:
+        weather_schema.Weather: Entrance fields schema.
+    """
+    tasks_by_id = WeatherModel.filter((WeatherModel.id == task_id) &
+                                      (WeatherModel.user_id == user.id)
+                                       ).first()
+
+    if not tasks_by_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="ID not found"
+        )
+
+    return weather_schema.Weather(
+        id=tasks_by_id.id,
+        city_name=tasks_by_id.city_name,
+        start_datetime=tasks_by_id.start_datetime,
+        end_datetime=tasks_by_id.end_datetime,
+        avg_temperature=tasks_by_id.avg_temperature,
+        latitude=tasks_by_id.latitude,
+        longitude=tasks_by_id.longitude,
+        comments=tasks_by_id.comments
+    )
