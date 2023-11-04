@@ -104,3 +104,24 @@ def update_element(element_id: int = Path(..., gt=0),
     return weather_service.update_element(element_id, current_user, city_name, start_datetime,
                                           end_datetime, avg_temperature, latitude, longitude,
                                           comments)
+
+
+@router.delete(
+    "/{element_id}",
+    tags=["weather"],
+    status_code=status.HTTP_200_OK,
+    dependencies=[Depends(get_db)]
+)
+def delete_task(element_id: int = Path(..., gt=0), current_user: User = Depends(get_current_user)):
+    """Delete element by ID.
+
+    Args:
+        element_id (int): Element ID.
+        current_user (User, optional): User. Defaults to Depends(get_current_user).
+
+    Returns:
+        json: Deleted element's message.
+    """
+    weather_service.delete_element(element_id, current_user)
+
+    return {'msg': f'Element {element_id} has been deleted successfully'}

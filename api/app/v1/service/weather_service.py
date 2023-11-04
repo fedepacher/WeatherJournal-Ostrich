@@ -86,7 +86,7 @@ def get_element_by_id(element_id: int, user: user_schema.User):
     if not elements_by_id:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="ID not found"
+            detail=f'Element {element_id} not found'
         )
 
     return weather_schema.Weather(
@@ -105,7 +105,7 @@ def update_element(element_id: int, user: user_schema.User, city_name: str="",
                    start_datetime: datetime=None, end_datetime: datetime=None,
                    avg_temperature: float=None, latitude: float=None, longitude: float=None,
                    comments: str=""):
-    """_summary_
+    """Upadte element by ID.
 
     Args:
         element_id (int): Element ID.
@@ -118,7 +118,7 @@ def update_element(element_id: int, user: user_schema.User, city_name: str="",
         longitude (float, optional): Longiture. Defaults to None.
 
     Raises:
-        HTTPException: If no element was found.
+        HTTPException: If element was not found.
 
     Returns:
         weather_schema.Weather: Updated entrance fields schema.
@@ -159,3 +159,24 @@ def update_element(element_id: int, user: user_schema.User, city_name: str="",
         longitude=element.longitude,
         comments=element.comments
     )
+
+
+def delete_element(element_id: int, user: user_schema.User):
+    """Delete element by ID
+
+    Args:
+        element_id (int): Element ID.
+        user (user_schema.User): User.
+
+    Raises:
+        HTTPException: If element was not found.
+    """
+    element = WeatherModel.filter((WeatherModel.id == element_id) &
+                                  (WeatherModel.user_id == user.id)).first()
+    if not element:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Element {element_id} not found'
+        )
+
+    element.delete_instance()
