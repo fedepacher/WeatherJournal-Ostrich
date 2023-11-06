@@ -16,7 +16,7 @@ jobs:
           pip install -r requirements.txt
       - name: Test API login user
         run: |          
-          python -m pytest test/test_user.py
+          pytest test/test_user.py
       - name: Test API endpoints
         run: |          
-          python -m pytest test/test_weather.py
+          pytest test/test_weather.py
