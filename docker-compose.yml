@@ -1,0 +1,17 @@
+services:
+  database:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    restart: always
+    environment:
+      POSTGRES_USER: ostrich
+      POSTGRES_PASSWORD: ostrich
+      POSTGRES_DB: test1
+
+  api:
+    build: .
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
