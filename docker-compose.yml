@@ -8,10 +8,3 @@ services:
       POSTGRES_USER: ostrich
       POSTGRES_PASSWORD: ostrich
       POSTGRES_DB: test1
-
-  api:
-    build: .
-    ports:
-      - 8000:8000
-    depends_on:
-      - database
