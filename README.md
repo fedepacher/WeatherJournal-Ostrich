@@ -45,6 +45,7 @@ SECRET_KEY=6b3d75e968f26f3be3443503efefd761e22d5e173fea95646a3659e673ebb97b
 FORECAST_API_KEY=<OpenWeatherMap key>
 ```
 
+>Note: Take in mind that DB_USER, DB_NAME and DB_PASS environment variable must be the same that variables defined in `docker-compose.yml` file named POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB.
 
 ## Virtual environment
 
